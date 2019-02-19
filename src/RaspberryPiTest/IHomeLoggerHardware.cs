@@ -3,7 +3,7 @@
     using System;
     using System.Reactive.Linq;
     using Unosquare.RaspberryIO;
-    using Unosquare.RaspberryIO.Gpio;
+    using Unosquare.RaspberryIO.Abstractions;
 
     public struct ButtonChangedArgs
     {
@@ -32,33 +32,29 @@
         {
             get
             {
-                return Observable.FromEvent<ButtonChangedArgs>(
-                    callback =>
-                    {
-                        Pi.Gpio.Pin00.RegisterInterruptCallback(EdgeDetection.FallingEdge, () => callback(new ButtonChangedArgs(false)));
-                        Pi.Gpio.Pin00.RegisterInterruptCallback(EdgeDetection.RisingEdge, () => callback(new ButtonChangedArgs(true)));
-                    },
-                    d =>
-                    {
-                        // no unsubscribe function
-                    });
+                throw new NotImplementedException();
             }
         }
 
         private void InitialisePins()
         {
-            var pin = Pi.Gpio.Pin00;
-            pin.PinMode = GpioPinDriveMode.Input;
+            Pi.Init<Unosquare.WiringPi.BootstrapWiringPi>();
+            Pi.Gpio[504].PinMode = GpioPinDriveMode.Output;
+            Pi.Gpio[505].PinMode = GpioPinDriveMode.Output;
+            Pi.Gpio[506].PinMode = GpioPinDriveMode.Output;
         }
 
         public override string ToString()
         {
             return Pi.Info.ToString();
         }
-
+        private bool isOn = false;
         public void SetLed(double red, double green, double blue)
         {
-            throw new NotImplementedException();
+            Pi.Gpio[504].Write(!isOn);
+            Pi.Gpio[505].Write(!isOn);
+            Pi.Gpio[506].Write(!isOn);
+            isOn = !isOn;
         }
     }
 }
