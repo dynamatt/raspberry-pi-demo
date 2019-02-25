@@ -1,5 +1,6 @@
 ﻿namespace RaspberryPiTest
 {
+    using System;
     using System.Reactive.Linq;
     using System.Threading;
     using System.Threading.Tasks;
@@ -30,7 +31,7 @@
 
         void ChangeLeds(object state)
         {
-
+            Console.WriteLine($"{DateTime.Now} Changing LEDs");
         }
 
 
