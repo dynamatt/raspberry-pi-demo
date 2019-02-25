@@ -26,7 +26,7 @@
     {
         public HomeLoggerHardware()
         {
-            InitialisePins();
+            //InitialisePins();
         }
 
         public IObservable<ButtonChangedArgs> ButtonChanged
