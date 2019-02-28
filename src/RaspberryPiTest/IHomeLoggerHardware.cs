@@ -3,8 +3,9 @@
     using System;
     using System.IO;
     using System.Reactive.Linq;
+    using Balena;
+    using Microsoft.Extensions.Logging;
     using Unosquare.RaspberryIO;
-    using Unosquare.RaspberryIO.Abstractions;
 
     public struct ButtonChangedArgs
     {
@@ -19,13 +20,16 @@
     public interface IHomeLoggerHardware
     {
         IObservable<ButtonChangedArgs> ButtonChanged { get; }
-        void SetLed(double red, double green, double blue);
+        void SetLed(LedColor color);
     }
 
     public class HomeLoggerHardware : IHomeLoggerHardware
     {
-        public HomeLoggerHardware()
+        private readonly ILogger<HomeLoggerHardware> _logger;
+
+        public HomeLoggerHardware(ILogger<HomeLoggerHardware> logger)
         {
+            this._logger = logger;
             InitialisePins();
         }
 
@@ -40,9 +44,6 @@
         private void InitialisePins()
         {
             Pi.Init<Unosquare.WiringPi.BootstrapWiringPi>();
-            //Pi.Gpio[504].PinMode = GpioPinDriveMode.Output;
-            //Pi.Gpio[505].PinMode = GpioPinDriveMode.Output;
-            //Pi.Gpio[506].PinMode = GpioPinDriveMode.Output;
 
             try
             {
@@ -52,7 +53,7 @@
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                _logger.LogError(ex, "Exception thrown while initialising LED pins for export.");
             }
 
             try
@@ -63,7 +64,7 @@
             }
             catch(Exception ex)
             {
-                Console.WriteLine(ex);
+                _logger.LogError(ex, "Exception thrown while setting LED pin direction.");
             }
 
         }
@@ -73,29 +74,12 @@
             return Pi.Info.ToString();
         }
 
-        private bool isOn = false;
-        public void SetLed(double red, double green, double blue)
+        public void SetLed(LedColor color)
         {
-            //Pi.Gpio[504].Write(!isOn);
-            //Pi.Gpio[505].Write(!isOn);
-            //Pi.Gpio[506].Write(!isOn);
+            File.WriteAllText(@"/sys/class/gpio/gpio504/value", color.Red ? "1" : "0");
+            File.WriteAllText(@"/sys/class/gpio/gpio505/value", color.Green ? "1" : "0");
+            File.WriteAllText(@"/sys/class/gpio/gpio506/value", color.Blue ? "1" : "0");
 
-            int r = red > 0.5 ? 1 : 0;
-            int g = green > 0.5 ? 1 : 0;
-            int b = blue > 0.5 ? 1 : 0;
-
-            try
-            {
-                File.WriteAllText(@"/sys/class/gpio/gpio504/value", r.ToString());
-                File.WriteAllText(@"/sys/class/gpio/gpio505/value", g.ToString());
-                File.WriteAllText(@"/sys/class/gpio/gpio506/value", b.ToString());
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-            }
-
-            isOn = !isOn;
         }
     }
 }

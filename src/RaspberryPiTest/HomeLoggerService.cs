@@ -1,9 +1,11 @@
 ﻿namespace RaspberryPiTest
 {
     using System;
+    using System.Linq;
     using System.Reactive.Linq;
     using System.Threading;
     using System.Threading.Tasks;
+    using Balena;
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
@@ -29,11 +31,16 @@
             });
         }
 
+        private int ledCount = 0;
         void ChangeLeds(object state)
         {
             Console.WriteLine($"{DateTime.Now} Changing LEDs");
-            var r = new Random();
-            _hardware.SetLed(r.NextDouble(), r.NextDouble(), r.NextDouble());
+            var color = LedColors.Colors.ToArray()[ledCount];
+            if (ledCount++ > LedColors.Colors.Count())
+            {
+                ledCount = 0;
+            }
+            _hardware.SetLed(color);
         }
 
 

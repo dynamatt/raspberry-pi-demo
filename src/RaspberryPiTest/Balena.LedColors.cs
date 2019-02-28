@@ -1,18 +1,44 @@
 ﻿namespace Balena
 {
+    using System.Collections.Generic;
+
     public class LedColor
-    { 
-        public bool Red { get; internal set; }
-        public bool Green { get; internal set; }
-        public bool Blue { get; internal set; }
+    {
+        internal LedColor(bool red, bool green, bool blue)
+        {
+            Red = red;
+            Green = green;
+            Blue = blue;
+        }
+
+        public bool Red { get; }
+        public bool Green { get; }
+        public bool Blue { get; }
     }
 
-    public class LedColors
+    public static class LedColors
     {
-        public static readonly LedColor Red = new LedColor { Red = true };
-        public static readonly LedColor Yellow = new LedColor { Red = true, Green = true };
-        public static readonly LedColor Green = new LedColor { Green = true };
-        public static readonly LedColor Blue = new LedColor { Blue = true };
-        public static readonly LedColor Purple = new LedColor { Red = true, Blue = true };
+        public static readonly LedColor Off = new LedColor(false, false, false);
+        public static readonly LedColor Blue = new LedColor(false, false, true);
+        public static readonly LedColor Green = new LedColor(false, true, false);
+        public static readonly LedColor Orange = new LedColor(false, true, true);
+        public static readonly LedColor Red = new LedColor(true, false, false);
+        public static readonly LedColor Purple = new LedColor(true, false, true);
+        public static readonly LedColor Yellow = new LedColor(true, true, false);
+        public static readonly LedColor White = new LedColor(true, true, true);
+
+        public static IEnumerable<LedColor> Colors
+        {
+            get
+            {
+                yield return Blue;
+                yield return Green;
+                yield return Orange;
+                yield return Red;
+                yield return Purple;
+                yield return Yellow;
+                yield return White;
+            }
+        }
     }
 }
