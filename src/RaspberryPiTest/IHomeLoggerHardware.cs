@@ -45,37 +45,20 @@
             //Pi.Gpio[505].PinMode = GpioPinDriveMode.Output;
             //Pi.Gpio[506].PinMode = GpioPinDriveMode.Output;
 
-            using (var writer = new StreamWriter("/sys/class/gpio/export", true))
+            try
             {
-                writer.Write("504");
-                writer.Write("505");
-                writer.Write("506");
+                File.WriteAllText(@"/sys/class/gpio/export", "504");
+                File.WriteAllText(@"/sys/class/gpio/export", "505");
+                File.WriteAllText(@"/sys/class/gpio/export", "506");
+                File.WriteAllText(@"/sys/class/gpio/gpio504/direction", "out");
+                File.WriteAllText(@"/sys/class/gpio/gpio505/direction", "out");
+                File.WriteAllText(@"/sys/class/gpio/gpio506/direction", "out");
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex);
             }
 
-            using (var writer = new StreamWriter("/sys/class/gpio/gpio504/direction", true))
-            {
-                writer.Write("out");
-            }
-
-            using (var writer = new StreamWriter("/sys/class/gpio/gpio505/direction", true))
-            {
-                writer.Write("out");
-            }
-
-            using (var writer = new StreamWriter("/sys/class/gpio/gpio506/direction", true))
-            {
-                writer.Write("out");
-            }
-
-            //var process = new Process();
-            //process.StartInfo.FileName =
-            //"echo 504 > /sys/class/gpio/export # (Red)\n" +
-            //"echo 505 > /sys/class/gpio/export # (Green)\n" +
-            //"echo 506 > /sys/class/gpio/export # (Blue)\n" +
-            //"echo \"out\" > /sys/class/gpio/gpio504/direction\n" +
-            //"echo \"out\" > /sys/class/gpio/gpio505/direction\n" +
-            //"echo \"out\" > /sys/class/gpio/gpio506/direction\n";
-            //process.Start();
         }
 
         public override string ToString()
