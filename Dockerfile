@@ -1,4 +1,4 @@
-FROM microsoft/dotnet:3.0-sdk AS build-env
+FROM microsoft/dotnet:2.1-sdk-stretch-arm32v7 AS build-env
 WORKDIR /app
 
 # copy csproj and restore as distinct layers
