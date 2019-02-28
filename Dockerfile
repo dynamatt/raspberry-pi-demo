@@ -6,6 +6,6 @@ COPY /src .
 
 RUN dotnet publish -c Release -o out -r linux-arm
 
-#FROM build-env
+FROM build-env
 
 ENTRYPOINT ["dotnet", "RaspberryPiTest/out/RaspberryPiTest.dll"]
