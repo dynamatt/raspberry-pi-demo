@@ -2,6 +2,7 @@
 {
     using System;
     using System.Diagnostics;
+    using System.IO;
     using System.Reactive.Linq;
     using Unosquare.RaspberryIO;
     using Unosquare.RaspberryIO.Abstractions;
@@ -43,6 +44,28 @@
             //Pi.Gpio[504].PinMode = GpioPinDriveMode.Output;
             //Pi.Gpio[505].PinMode = GpioPinDriveMode.Output;
             //Pi.Gpio[506].PinMode = GpioPinDriveMode.Output;
+
+            using (var writer = new StreamWriter("/sys/class/gpio/export", true))
+            {
+                writer.Write("504");
+                writer.Write("505");
+                writer.Write("506");
+            }
+
+            using (var writer = new StreamWriter("/sys/class/gpio/gpio504/direction", true))
+            {
+                writer.Write("out");
+            }
+
+            using (var writer = new StreamWriter("/sys/class/gpio/gpio505/direction", true))
+            {
+                writer.Write("out");
+            }
+
+            using (var writer = new StreamWriter("/sys/class/gpio/gpio506/direction", true))
+            {
+                writer.Write("out");
+            }
 
             //var process = new Process();
             //process.StartInfo.FileName =
