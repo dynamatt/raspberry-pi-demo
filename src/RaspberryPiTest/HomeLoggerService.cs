@@ -32,6 +32,8 @@
         void ChangeLeds(object state)
         {
             Console.WriteLine($"{DateTime.Now} Changing LEDs");
+            var r = new Random();
+            _hardware.SetLed(r.NextDouble(), r.NextDouble(), r.NextDouble());
         }
 
 
@@ -49,8 +51,7 @@
         {
             _logger.LogInformation("Stopping home logger service");
             _timer.Change(Timeout.Infinite, Timeout.Infinite);
-
-            throw new System.NotImplementedException();
+            return  Task.CompletedTask;
         }
     }
 }

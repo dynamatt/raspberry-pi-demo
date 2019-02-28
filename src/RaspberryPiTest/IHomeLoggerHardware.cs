@@ -1,7 +1,6 @@
 ﻿namespace RaspberryPiTest
 {
     using System;
-    using System.Diagnostics;
     using System.IO;
     using System.Reactive.Linq;
     using Unosquare.RaspberryIO;
@@ -50,6 +49,14 @@
                 File.WriteAllText(@"/sys/class/gpio/export", "504");
                 File.WriteAllText(@"/sys/class/gpio/export", "505");
                 File.WriteAllText(@"/sys/class/gpio/export", "506");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+
+            try
+            {
                 File.WriteAllText(@"/sys/class/gpio/gpio504/direction", "out");
                 File.WriteAllText(@"/sys/class/gpio/gpio505/direction", "out");
                 File.WriteAllText(@"/sys/class/gpio/gpio506/direction", "out");
@@ -72,15 +79,22 @@
             //Pi.Gpio[504].Write(!isOn);
             //Pi.Gpio[505].Write(!isOn);
             //Pi.Gpio[506].Write(!isOn);
-            var process = new Process();
-            int r = red > 0 ? 1 : 0;
-            int g = green > 0 ? 1 : 0;
-            int b = blue > 0 ? 1 : 0;
-            //process.StartInfo.FileName =
-            //$"echo {r} > / sys /class/gpio/gpio504/value\n" +
-            //$"echo {g} > /sys/class/gpio/gpio505/value\n" +
-            //$"echo {b} > /sys/class/gpio/gpio506/value";
-            //process.Start();
+
+            int r = red > 0.5 ? 1 : 0;
+            int g = green > 0.5 ? 1 : 0;
+            int b = blue > 0.5 ? 1 : 0;
+
+            try
+            {
+                File.WriteAllText(@"/sys/class/gpio/gpio504/value", r.ToString());
+                File.WriteAllText(@"/sys/class/gpio/gpio505/value", g.ToString());
+                File.WriteAllText(@"/sys/class/gpio/gpio506/value", b.ToString());
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+
             isOn = !isOn;
         }
     }
